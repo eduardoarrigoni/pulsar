@@ -1,0 +1,20 @@
+# secrets — never commit
+token
+*.token
+.env
+.env.*
+*.pem
+*.key
+
+# node
+node_modules/
+dist/
+build/
+coverage/
+*.log
+
+# os / editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/

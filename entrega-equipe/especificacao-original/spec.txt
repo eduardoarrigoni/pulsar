@@ -1,0 +1,397 @@
+1. Qual seu objetivo com esse projeto?
+
+O projeto tem como objetivo construir um ecossistema digital inteligente para gestão, acompanhamento, prescrição e análise esportiva, inicialmente voltado para assessorias de corrida de rua, mas com arquitetura preparada para futuramente atender outras modalidades esportivas.
+
+A plataforma pretende centralizar em um único ambiente as principais atividades realizadas por treinadores e atletas, incluindo gestão de atletas e grupos, planejamento e periodização dos treinamentos, distribuição de treinos, acompanhamento da execução, análise de desempenho, percepção subjetiva do atleta, comunicação, organização de provas e, futuramente, gestão administrativa e financeira.
+
+Um dos principais objetivos é permitir que o treinamento seja adaptado de acordo com o comportamento real do atleta. Além dos dados objetivos provenientes de dispositivos e plataformas esportivas, como ritmo, frequência cardíaca, distância e carga, o sistema deverá considerar informações subjetivas como RPE, qualidade do sono, fadiga e presença/localização de dores.
+
+No produto final, o sistema deverá evoluir para um ecossistema multimodal de inteligência esportiva, incorporando Inteligência Artificial, Machine Learning, visão computacional e análise de imagens e vídeos.
+
+Isso permitirá, futuramente, relacionar dados de desempenho e treinamento com informações técnicas e biomecânicas obtidas através da análise do movimento do atleta.
+
+O objetivo final é que a plataforma não apenas registre o que o atleta fez, mas seja capaz de auxiliar o treinador a compreender o que está acontecendo, adaptar o treinamento e acompanhar a evolução do atleta de forma individualizada.
+
+---
+
+2. Qual problema o aplicativo pretende resolver?
+
+O principal problema é a fragmentação das ferramentas e informações utilizadas no treinamento esportivo.
+
+Atualmente, o treinador frequentemente precisa utilizar diferentes plataformas para prescrição de treinos, coleta de atividades, análise de desempenho, comunicação, organização dos atletas, controle financeiro e outras tarefas administrativas.
+
+Além disso, os dados do atleta ficam distribuídos em diferentes sistemas. Informações como ritmo, frequência cardíaca e distância podem estar em uma plataforma, enquanto informações sobre sono, fadiga, percepção de esforço e dores precisam ser obtidas manualmente através de mensagens ou formulários.
+
+Existe ainda uma segunda questão: a maioria das plataformas apresenta os dados, mas não necessariamente transforma esses dados em uma visão integrada do atleta.
+
+O sistema pretende resolver esse problema centralizando informações objetivas e subjetivas e permitindo que elas sejam analisadas conjuntamente.
+
+No produto final, essa análise será ampliada para incluir vídeos e imagens do atleta, possibilitando o uso de visão computacional e Machine Learning para análise técnica e biomecânica.
+
+Dessa forma, o sistema pretende sair de uma lógica de "aqui está o treino que você precisa fazer" para uma abordagem na qual o treinador possa compreender como o atleta está respondendo ao treinamento e adaptar os próximos estímulos.
+
+---
+
+3. Como esse problema é resolvido hoje?
+
+Atualmente, o treinador geralmente utiliza uma combinação de plataformas especializadas.
+
+Pode utilizar uma plataforma como Treinus para gerenciamento e prescrição, Strava ou Garmin para atividades, planilhas para organização, WhatsApp para comunicação e ferramentas específicas para controle financeiro ou outros processos.
+
+A percepção do atleta frequentemente é coletada de maneira informal, através de mensagens ou conversas com o treinador, incluindo informações sobre esforço, sono, fadiga e dores.
+
+Além disso, a análise técnica e biomecânica frequentemente depende da avaliação manual do treinador ou de ferramentas específicas.
+
+Esse cenário gera fragmentação, retrabalho e perda de contexto.
+
+---
+
+4. O que você gostaria de melhorar em relação à solução atual?
+
+A proposta é melhorar a solução atual em quatro grandes dimensões.
+
+Gestão
+
+Centralizar:
+
+- Atletas;
+- Grupos;
+- Treinos;
+- Periodização;
+- Provas;
+- Comunicação;
+- Futuramente, financeiro.
+
+Prescrição inteligente
+
+Permitir:
+
+- Planejamento semanal e mensal;
+- Periodização;
+- Distribuição de treinos para grupos;
+- Personalização individual;
+- Ajuste dos treinos conforme desempenho;
+- Adaptação baseada em ritmo, frequência cardíaca, carga, fadiga e percepção do atleta.
+
+A plataforma deverá permitir que um treinador crie um treinamento para um grupo e posteriormente faça ajustes individuais de acordo com o nível e a resposta de cada atleta.
+
+Visualização e análise
+
+Oferecer dashboards e gráficos claros para:
+
+- Pace;
+- Frequência cardíaca;
+- Distância;
+- Tempo;
+- Carga;
+- Evolução;
+- Aderência;
+- Comparação entre períodos;
+- Comparação entre treinos.
+
+A intenção é que o treinador consiga analisar um atleta individualmente ou dezenas de atletas simultaneamente.
+
+Relação treinador-atleta
+
+Os treinos poderão possuir vídeos explicativos, permitindo que o treinador explique:
+
+- Objetivo do treino;
+- Execução;
+- Intensidade;
+- Postura;
+- Respiração;
+- Técnica;
+- Pontos de atenção.
+
+Além disso, poderão ser utilizados vídeos, áudios e mensagens personalizadas para aproximar o treinador do atleta.
+
+---
+
+5. Como você apresentaria esse projeto para um cliente?
+
+O Pulsar é um ecossistema inteligente para treinadores e atletas que transforma dados de treinamento em decisões.
+
+Em uma única plataforma, o treinador poderá planejar os treinamentos, organizar seus atletas, acompanhar a execução, analisar desempenho e compreender como cada atleta está respondendo aos estímulos.
+
+O atleta também terá acesso a uma experiência mais completa: poderá visualizar sua evolução, receber treinos personalizados, assistir a explicações em vídeo, registrar sua percepção de esforço, sono, fadiga e dores e acompanhar seu desenvolvimento.
+
+Inicialmente, o sistema utilizará a integração com o Strava como principal fonte externa de dados. Posteriormente, serão incorporadas outras plataformas, dispositivos esportivos e novas fontes de informação.
+
+A longo prazo, o Pulsar pretende utilizar Inteligência Artificial, Machine Learning e visão computacional para analisar não apenas os dados da atividade, mas também vídeos e imagens do movimento do atleta.
+
+Assim, o objetivo é criar uma plataforma capaz de integrar gestão, treinamento, dados, relacionamento e inteligência esportiva em um único ecossistema.
+
+---
+
+6. Existe algum objetivo de reduzir custos, tempo ou trabalho manual?
+
+Sim.
+
+O objetivo é reduzir principalmente o tempo operacional do treinador.
+
+A plataforma deverá diminuir tarefas como:
+
+- Transferência manual de dados;
+- Atualização de planilhas;
+- Criação repetitiva de treinos;
+- Acompanhamento individual manual;
+- Consolidação de métricas;
+- Comunicação repetitiva;
+- Análise manual de grandes volumes de dados.
+
+A automação também deverá permitir que um treinador consiga administrar uma quantidade maior de atletas sem que o aumento da equipe acompanhe necessariamente o crescimento da assessoria.
+
+No futuro, algoritmos de análise poderão identificar padrões e situações que merecem atenção, permitindo que o treinador concentre seu tempo nas decisões que realmente exigem sua intervenção profissional.
+
+---
+
+7. A ideia deverá exibir os dados de um grupo ou de forma individual também?
+
+Ambos.
+
+O sistema deverá possuir diferentes níveis de visualização:
+
+Assessoria → Grupo → Atleta → Treino/Sessão.
+
+O treinador poderá visualizar indicadores gerais da assessoria, analisar grupos específicos, consultar individualmente cada atleta e aprofundar a análise em sessões de treinamento específicas.
+
+Na visão de grupo, deverão ser possíveis comparações de métricas como volume, pace, frequência cardíaca, carga de treinamento, aderência e evolução.
+
+Na visão individual, deverão ser apresentados dados detalhados e históricos do atleta.
+
+O atleta terá acesso aos seus próprios dados e às informações disponibilizadas pelo treinador.
+
+---
+
+8. O que você espera do MVP?
+
+O MVP terá como objetivo validar a capacidade da plataforma de centralizar e analisar os dados de treinamento de uma assessoria.
+
+Inicialmente, a integração externa será realizada através da API do Strava, permitindo importar as atividades realizadas pelos atletas.
+
+O MVP deverá contemplar:
+
+- Cadastro de treinador;
+- Cadastro de atletas;
+- Criação e gerenciamento de grupos;
+- Planejamento de treinos;
+- Distribuição individual e em grupo;
+- Integração com Strava;
+- Importação das atividades;
+- Armazenamento histórico;
+- Comparação entre treino planejado e realizado;
+- Dashboard individual;
+- Dashboard de grupo;
+- Gráficos de evolução;
+- Métricas básicas de desempenho;
+- Registro de RPE;
+- Registro de sono;
+- Registro de fadiga;
+- Registro de dores;
+- Controle de permissões.
+
+A arquitetura deverá ser desenvolvida de forma independente da fonte de dados, permitindo futuramente incorporar Garmin, COROS, Polar e outras plataformas sem reconstruir o núcleo do sistema.
+
+Recursos como Machine Learning, análise automática de biomecânica, visão computacional, análise automatizada de vídeo, treinos guiados por áudio, gamificação avançada, comunidade e sistema financeiro completo fazem parte da visão do produto final e não necessariamente do MVP.
+
+---
+
+9. Quais análises você pretende que o software faça?
+
+Análises de desempenho
+
+- Pace;
+- Distância;
+- Tempo;
+- Frequência cardíaca;
+- Cadência;
+- Elevação;
+- Volume;
+- Carga de treinamento;
+- Aderência;
+- Evolução;
+- Comparação entre treino planejado e realizado.
+
+Percepção do atleta
+
+- RPE;
+- Qualidade do sono;
+- Fadiga;
+- Dor;
+- Localização da dor;
+- Percepção pós-treino.
+
+Análises futuras
+
+- Tendências de desempenho;
+- Identificação de alterações de carga;
+- Identificação de padrões de recuperação;
+- Previsão de desempenho;
+- Análise da resposta aos estímulos;
+- Ajuste automático ou assistido do treinamento;
+- Correlação entre métricas objetivas e subjetivas.
+
+Análise técnica e biomecânica
+
+No produto final, o atleta poderá enviar vídeos para análise.
+
+O sistema poderá utilizar visão computacional para identificar pontos corporais como:
+
+- Quadril;
+- Joelho;
+- Tornozelo;
+- Pé;
+- Tronco.
+
+A partir desses pontos, poderão ser estudados padrões relacionados ao movimento, como:
+
+- Ângulos articulares;
+- Amplitude de movimento;
+- Padrão de passada;
+- Simetria;
+- Cadência;
+- Tempo de contato;
+- Comportamento do movimento.
+
+Inicialmente, essas análises poderão ser assistidas pelo treinador e, posteriormente, poderão evoluir para modelos automatizados de Machine Learning.
+
+---
+
+10. Cada sessão/treino deverá ser armazenado? Os dados podem ser descartados depois de um tempo?
+
+Cada sessão deverá ser armazenada historicamente.
+
+O objetivo é permitir análises longitudinais e acompanhar a evolução do atleta ao longo de semanas, meses e anos.
+
+Uma sessão poderá possuir:
+
+Treino planejado → Atividade realizada → Dados objetivos → Percepção do atleta → Feedback do treinador → Análises → Ajustes futuros.
+
+No produto final, uma sessão poderá também estar relacionada a vídeos, imagens e análises biomecânicas.
+
+Os dados não deverão ser descartados simplesmente após determinado período, pois o histórico é essencial para identificar tendências e construir modelos de análise e Machine Learning.
+
+Naturalmente, o armazenamento deverá respeitar políticas de privacidade, segurança, consentimento e retenção de dados.
+
+---
+
+11. Os dados serão apresentados após cada sessão/treino ou serão analisados e apresentados de forma periódica?
+
+Ambos.
+
+Após cada sessão
+
+O atleta e o treinador poderão visualizar:
+
+- Resultado;
+- Métricas;
+- Comparação com o treino planejado;
+- RPE;
+- Feedback;
+- Informações relevantes da sessão.
+
+Periodicamente
+
+O sistema consolidará:
+
+- Evolução;
+- Carga;
+- Volume;
+- Aderência;
+- Desempenho;
+- Recuperação;
+- Tendências.
+
+Futuramente
+
+O sistema poderá gerar alertas inteligentes quando determinadas condições forem identificadas, por exemplo:
+
+"O atleta apresentou queda de desempenho nas últimas semanas."
+
+ou:
+
+"A carga de treinamento apresentou aumento significativo em relação ao período anterior."
+
+Esses alertas terão caráter de apoio à decisão do treinador e não de diagnóstico médico.
+
+---
+
+12. Os dados de cada indivíduo poderão ser consultados pelos mesmos?
+
+Sim, respeitando as permissões e regras de privacidade.
+
+Atleta
+
+O atleta poderá visualizar seus próprios:
+
+- Treinos;
+- Atividades;
+- Métricas;
+- Evolução;
+- Feedback;
+- Vídeos;
+- Avaliações.
+
+Treinador
+
+O treinador poderá visualizar os dados dos atletas vinculados à sua assessoria.
+
+Grupos
+
+O treinador poderá comparar atletas pertencentes a um mesmo grupo, respeitando as regras de privacidade definidas pela plataforma.
+
+Administrador
+
+O administrador terá permissões administrativas específicas relacionadas à gestão da plataforma.
+
+---
+
+13. Qual é a visão de longo prazo do produto?
+
+A visão de longo prazo é transformar o Pulsar em um ecossistema multimodal de inteligência esportiva.
+
+A corrida de rua será o primeiro domínio de aplicação, permitindo validar o produto, sua arquitetura e sua proposta de valor.
+
+Posteriormente, o sistema poderá incorporar outras modalidades esportivas e diferentes fontes de dados, como dispositivos vestíveis, plataformas esportivas, avaliações físicas, imagens e vídeos.
+
+Com a evolução da plataforma, técnicas de Machine Learning, Inteligência Artificial e visão computacional poderão ser utilizadas para identificar padrões de desempenho, comportamento e movimento.
+
+Dessa forma, o Pulsar poderá evoluir de uma plataforma de gestão de treinamentos para uma ferramenta capaz de integrar dados objetivos, percepção do atleta, análise técnica e biomecânica e inteligência artificial.
+
+O objetivo final é auxiliar o profissional na tomada de decisões e proporcionar ao atleta uma experiência de treinamento mais personalizada, compreensível e orientada por dados.
+
+---
+
+Visão geral do produto
+
+A arquitetura conceitual do produto pode ser representada da seguinte forma:
+
+FONTES DE DADOS
+
+Strava → Garmin → COROS → Polar → RPE → Sono → Avaliações → Vídeo → Imagem
+
+↓
+
+PULSAR CORE
+
+Atleta → Treino → Sessão → Grupo → Histórico
+
+↓
+
+ANALYTICS
+
+Performance → Carga → Aderência → Evolução → Biomecânica
+
+↓
+
+INTELLIGENCE
+
+Machine Learning → Visão Computacional → Detecção de padrões → Recomendações
+
+↓
+
+EXPERIÊNCIA
+
+Treinador → Dashboard → Alertas → Feedback → Atleta
+
+A corrida será o primeiro domínio de aplicação, enquanto a arquitetura deverá permitir a expansão para outras modalidades esportivas e novas fontes de dados.
