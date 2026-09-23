@@ -8,9 +8,11 @@
 
 - Two roles only: **athlete** and **coach**. No admin, no tenant. Every account signs up on its own.
 - **Connection** athlete ↔ coach is a friend-style link: either side sends a request by the other's **username** and the other accepts, or the coach shares an **invite link** and whoever opens it becomes their athlete.
-- The coach owns **assessorias** and **groups** (containers with membership history) and puts connected athletes in them.
+- The coach owns **assessorias** and **groups** (containers with membership history). They differ in who can join:
+  - **Group: open.** Any athlete can be a member, **connected to the coach or not**. They join by sending a join request the coach accepts, or by opening the group's invite link.
+  - **Assessoria: connected only.** Athlete and coach **must be connected** (UC03) first. Only connected athletes can be put in it or join it, and disconnecting removes the athlete from it.
 - The coach creates prescriptions and sends them to any number of athletes by **filter** (level, assessoria, group, …) or by **group**.
-- Tenant boundary = the connection. A coach sees only athletes connected to them; `coach_id` replaces `assessoria_id` as the scoping key on every query.
+- Tenant boundary = the connection, plus group membership for that group's sessions only. A coach sees full data only for athletes connected to them. A **group-only member** (in the coach's group, not connected) shows up in that group's roster, receives its workouts, and shares **only the sessions of that group's workouts** with the coach. `coach_id` replaces `assessoria_id` as the scoping key on every query.
 - **Rank (`GAMIFICATION.md`)** is two separate 1–100 ladders. The athlete's (UC29–UC32) is earned by running; the coach can see and filter by it, never set it. The coach's own (UC35, UC36) is earned by coaching — roster, prescriptions, feedback, review queue, live sessions — and athletes never see it. Level (UC24) stays the coach's own label, separate from both.
 - **Daily missions (UC33)** are assigned to both roles, 3 per local day from separate catalogues, and are the main daily XP source. The Coach Home carries its own Missions card.
 - **Live following (UC28)** makes the watch two-way (samples up, coach commands down in the response body), shows the athlete's map and position to the coach during a run the athlete chose to share, and requires push notifications in MVP.
@@ -26,12 +28,12 @@
 | **Local DB — outbox** | workout drafts, feedback (`PUT /sessions/:id/feedback`), file uploads on behalf (`POST /athletes/:id/imports`) |
 | **API client** | base URL = api-gateway; `Authorization: Bearer <access>`; interceptor renews once on 401 via `POST /auth/refresh`, then retries; second 401 → Login |
 | **Sync** | `GET /sync?since=<cursor>` per scope on screen focus and on app foreground |
-| **Push** | FCM/APNs: `live_started`, `run_received`, connection requests; delivered by the gateway from Kafka events |
+| **Push** | FCM/APNs: `live_started`, `run_received`, connection requests, group join requests; delivered by the gateway from Kafka events |
 | **Live channel** | WebSocket to the gateway (`/live`), opened only while a Live screen (UC28) is on foreground; carries samples in, commands out |
 | **Navigation** | Splash → Login / Sign up → Role router → Coach Home with tabs **Athletes · Groups · Workouts · Dashboard · Settings** |
 | **Coach Home extras** | rank strip (tier badge, rank, progress bar) and Missions card (3 per day, streak) above the athlete list — see `GAMIFICATION.md` UC33, UC36 |
 
-What the coach app never holds or shows: athlete `latlng`/maps **outside a live session the athlete turned on (UC28)**, athlete credentials, athletes not connected to this coach. Live positions are kept in memory only, never in the local DB.
+What the coach app never holds or shows: athlete `latlng`/maps **outside a live session the athlete turned on (UC28)**, athlete credentials, athletes neither connected to this coach nor in one of their groups, and anything about a group-only member beyond that group's sessions (no activities, parameters, individual dashboard or live). Live positions are kept in memory only, never in the local DB.
 
 ### Coverage
 
@@ -42,7 +44,7 @@ What the coach app never holds or shows: athlete `latlng`/maps **outside a live 
 | UC24 | Set athlete parameters & level | Athlete parameters | `PUT /athletes/:id/parameters` | no |
 | UC04 | Disconnect athlete | Athlete detail | `DELETE /connections/:id` | no |
 | UC05 | Manage assessorias & groups | Groups tab | `/assessorias*`, `/groups*` | read cache |
-| UC06 | Put athlete in assessoria / group | Group detail, Add athlete | `/groups/:id/members*`, `/assessorias/:id/members*` | no |
+| UC06 | Put athlete in assessoria / group; group join requests & link | Group detail, Add athlete, Join requests, Group invite link | `/groups/:id/members*`, `/assessorias/:id/members*`, `/groups/:id/join-requests*`, `/groups/:id/link`, `POST /groups/join` | no |
 | UC23 | Configure tolerances | Settings → Tolerances | `GET/PUT /settings/tolerances` | no |
 | UC09 | Import activity file (athlete own, or coach on behalf) | Athlete activities → Import | `POST /athletes/:id/imports`, `GET .../imports/:jobId` (athlete side: `/me/imports`) | queued in outbox |
 | UC13 | Create prescription | Workout form | `POST /prescriptions` | draft only |
@@ -173,7 +175,7 @@ What the coach app never holds or shows: athlete `latlng`/maps **outside a live 
 |---|---|
 | **Actor** | Coach |
 | **Precondition** | connection active |
-| **Postcondition** | `connection.ended_at` set; open memberships closed; future `planned` sessions from this coach removed; history kept |
+| **Postcondition** | `connection.ended_at` set; open **assessoria** memberships closed; **group** memberships kept (athlete becomes a group-only member); future `planned` sessions from this coach removed except those of groups the athlete is still in; history kept |
 
 **Main flow**
 
@@ -181,12 +183,14 @@ What the coach app never holds or shows: athlete `latlng`/maps **outside a live 
 2. Confirm: "History is kept. The athlete will no longer receive your workouts."
 3. `DELETE /connections/:id` → `200`.
 4. Athlete leaves the Athletes list (visible under "Past athletes" filter, read-only).
-5. Group and assessoria details (as of today) no longer list the athlete; membership history shows `left_at = today`.
+5. Assessoria details (as of today) no longer list the athlete; membership history shows `left_at = today`.
+6. Group details still list the athlete, now marked **"not connected"**: the coach keeps seeing that group's sessions only (see model).
 
 **Alternative flows**
 
-- **Athlete disconnects first (their app).** Coach app, next sync: same result as steps 4–5 plus a Home card "*name* left".
-- **Reconnect.** Either side runs UC03 again → new connection row; memberships **not** reopened, past sessions and results still linked to the old connection.
+- **Athlete disconnects first (their app).** Coach app, next sync: same result as steps 4–6 plus a Home card "*name* left".
+- **Coach wants the athlete out of the groups too.** Remove them from each group (UC06 step 5). Disconnect does not do it.
+- **Reconnect.** Either side runs UC03 again → new connection row; assessoria memberships **not** reopened, past sessions and results still linked to the old connection.
 - **Pending imports for the athlete.** Cancelled; progress card shows "cancelled".
 
 ---
@@ -200,6 +204,15 @@ What the coach app never holds or shows: athlete `latlng`/maps **outside a live 
 | **Postcondition** | assessoria or group created, renamed or archived |
 
 Assessoria = top-level container (e.g. the coach's team or brand); group = smaller set, optionally inside an assessoria. Both have dated membership.
+
+| | Group | Assessoria |
+|---|---|---|
+| Who can be a member | any athlete account | only athletes **connected** to this coach |
+| How they get in | join request accepted by the coach, group invite link, or added by the coach (connected athletes) | added by the coach, or join request / link **from a connected athlete** |
+| Coach sees | connected member: everything; group-only member: that group's sessions only | everything (all members are connected) |
+| On disconnect (UC04) | membership kept | membership closed |
+
+A group inside an assessoria is still open: joining the group does **not** put the athlete in the assessoria, and group-only members of that group do not count in the assessoria's dashboard.
 
 **Main flow**
 
@@ -220,21 +233,47 @@ Assessoria = top-level container (e.g. the coach's team or brand); group = small
 | | |
 |---|---|
 | **Actor** | Coach |
-| **Precondition** | container active, athlete connected |
-| **Postcondition** | membership row with `joined_at`; or `left_at` on removal |
+| **Precondition** | container active. **Assessoria:** athlete connected. **Group:** any athlete account |
+| **Postcondition** | membership row with `joined_at`, `source: 'coach_added' \| 'join_request' \| 'link'`; or `left_at` on removal |
 
-**Main flow**
+**Flow A — coach adds athletes**
 
-1. Group (or assessoria) detail → members as of a date (default today) → `GET /groups/:id/members?on=YYYY-MM-DD`.
+1. Group (or assessoria) detail → members as of a date (default today) → `GET /groups/:id/members?on=YYYY-MM-DD`. Group-only members carry a **"not connected"** chip.
 2. Add → picker lists connected athletes **not** currently in the container, with level chips and search by name/username; multi-select.
 3. `joined_at` defaults to today, backdating allowed, one date for the whole selection.
 4. Confirm → `POST /groups/:id/members { athleteIds[], joinedAt }` → list refreshes.
 5. Remove → tap member → Remove → `left_at` defaults today → `POST /groups/:id/members/:mid/leave { leftAt }` → member leaves the "as of today" list; history keeps the row.
 
+**Flow B — athlete asks to join a group (no connection needed)**
+
+1. Athlete (their app) → "Find group" → coach's username → the coach's **groups** only (assessorias are never listed to a non-connected athlete) → Ask to join → `POST /groups/:id/join-requests`.
+2. Coach app, next sync: Group detail badge "1 join request"; push.
+3. Group detail → Join requests → `GET /groups/:id/join-requests` → Accept → `POST /groups/:id/join-requests/:rid/accept` → membership `source: 'join_request'`, `joined_at = today`. **No connection is created.**
+4. Decline → `POST /groups/:id/join-requests/:rid/decline`; athlete can ask again.
+
+**Flow C — group invite link**
+
+1. Group detail → "Invite to group" → `GET /groups/:id/link` → `pulsar://group/<code>` (+ `https://` fallback), share sheet / QR.
+2. Athlete opens it → logged in: `POST /groups/join { code }`; if not: Sign up / Login, then the same call.
+3. Membership created with `source: 'link'`, no acceptance step, **no connection created**.
+4. "Reset link" → `POST /groups/:id/link/rotate` → old code stops working; members stay.
+
+This link is not the coach's connection link (UC03 flow C). The connection link connects; the group link only adds to that group.
+
+**Flow D — join an assessoria**
+
+1. Only a connected athlete can ask or be added. Athlete (their app) → My coaches → coach → Assessorias → Ask to join → same accept/decline as flow B on `/assessorias/:id/join-requests`.
+2. Not connected → the app shows "Connect with this coach first" and starts UC03 flow A.
+
 **Alternative flows**
 
 - **3a — future `joined_at`.** Picker caps at today; server `422`.
 - **4a — athlete already has an open membership here.** Skipped in the response (`added / skipped` counts).
+- **B/C — athlete already a member.** `200` no-op.
+- **Add a group-only member to an assessoria.** Server `409 "not connected"`. The coach must connect first (UC03), e.g. with "Invite to connect" from the member row.
+- **Group-only member later connects.** Membership unchanged; the "not connected" chip goes away and the coach sees full data from then on.
+- **Athlete leaves a group (their app).** `POST /groups/:id/members/me/leave` → `left_at = today`; that group's future `planned` sessions are removed.
+- **Coach removes a group-only member.** Same as step 5; the athlete no longer sees the group.
 - **From Athlete detail.** Athlete detail → Groups → "Add to…" → same call with one athlete.
 - **Historical view.** Change the date in the detail → same route with another `on=`, read-only.
 - **Timeline.** Athlete detail → Groups → `GET /athletes/:id/memberships` → joined/left per container.
@@ -374,6 +413,7 @@ Assessoria = top-level container (e.g. the coach's team or brand); group = small
 **Alternative flows**
 
 - **Group resolved on the scheduled date.** An athlete who joins after `scheduled_date` gets no session; one who left before gets none.
+- **Group-only members.** A **group** selection includes them. **Filters** and **Athletes** pick only connected athletes: level and threshold are set per connection (UC24), and a coach cannot send an individual workout to someone they are not connected to. Their sessions have no load until they connect (no threshold).
 - **Filter is a snapshot.** Athletes matching the filter later do not get the workout; coach sends again.
 - **Athlete selected twice (group + filter).** One session; `skipped` counts it.
 - **Same recipients sent twice.** No duplicates; `sessionsCreated: 0`.
@@ -492,13 +532,14 @@ Assessoria = top-level container (e.g. the coach's team or brand); group = small
 1. Dashboard tab → container picker (group or assessoria) + period (default last 8 weeks) + optional level filter.
 2. `GET /groups/:id/dashboard?from&to&level=` (or `/assessorias/:id/dashboard`) → per week: athletes counted, average load, average adherence, misses.
 3. Tap week → athletes who were members that week (membership window applied server-side) with their own numbers.
-4. Tap athlete → UC20.
+4. Tap athlete → UC20 (connected); group-only member → only that group's sessions, no individual dashboard.
 5. Cached per container + period + filter.
 
 **Alternative flows**
 
 - **Container younger than the period.** "Needs a few weeks of data".
 - **Athlete moved containers mid-period.** Counted in each only for weeks inside their membership window.
+- **Group-only members in a group dashboard.** Counted for completed / missed and adherence of that group's sessions; left out of average load (no threshold).
 - **Offline.** Last cached view.
 
 ---
